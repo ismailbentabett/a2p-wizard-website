@@ -7,7 +7,6 @@
   <meta property="og:title" content="SiteSledge LLC" />
   <meta property="og:description" content="Website and Marketing Solutions for Service Businesses" />
   <meta property="og:image" content="assets/og-image.jpg" />
-  <meta name="robots" content="noindex,nofollow" />
   
   <link rel="stylesheet" href="style.css">
 
@@ -39,7 +38,7 @@
         <h1 class="h1">Website and Marketing Solutions for Service Businesses</h1>
         <div class="sub">SiteSledge LLC • Serving Cheyenne, Laramie County, Wyoming • Updated 02/14/2026</div>
         <div class="ctaRow">
-          <a class="btn" href="tel:+12342250604">Call</a>
+          <a class="btn" href="tel:+18449460109">Call</a>
           <a class="btn secondary" href="#optin">Sign Up For Info</a>
         </div>
       </div>
@@ -75,8 +74,8 @@
       <div class="card">
         <h2>Contact</h2>
         <div class="kv">
-          <div class="k">Email</div><div class="v"><a class="u" href="mailto:info%40sitesledgellc.nebulabrandgroup.com">info@sitesledgellc.nebulabrandgroup.com</a></div>
-          <div class="k">Phone</div><div class="v"><a class="u" href="tel:+12342250604">+1 (234) 225-0604</a></div>
+          <div class="k">Email</div><div class="v"><a class="u" href="mailto:contact@sitesledge.llc">contact@sitesledge.llc</a></div>
+          <div class="k">Phone</div><div class="v"><a class="u" href="tel:+18449460109">1-844-946-0109</a></div>
           <div class="k">Address</div><div class="v">1021 E Lincolnway, 9573, Cheyenne, WY 82001, Laramie, US</div>
         </div>
         <a href="https://www.google.com/maps/search/?api=1&query=1021%20E%20Lincolnway%2C%209573%2C%20Cheyenne%2C%20WY%2082001%2C%20Laramie%2C%20US" target="_blank" rel="noopener" class="directions-btn">
@@ -100,22 +99,17 @@
         <label for="phone">Mobile Phone Number (Optional)</label>
         <input id="phone" name="phone" type="tel" inputmode="tel" />
 
-        <div class="check">
-          <input id="sms_informational" name="sms_informational" type="checkbox" />
-          <span>
-          I consent to receive <strong>non-marketing messages about service updates, system maintenance notifications, and account information</strong> from <strong>SiteSledge LLC</strong>. Message frequency varies, up to 4 messages per month. Message & data rates may apply. Text HELP for assistance, reply STOP to opt out.
-          </span>
+        <label for="message">Message</label>
+        <textarea id="message" name="message"></textarea>
+
+        <div class="check check-legal">
+          <input id="agree_legal" name="agree_legal" type="checkbox" required />
+          <span>I agree to the <a href="terms.html" class="u">Terms of Service</a> and <a href="privacy.html" class="u">Privacy Policy</a>.</span>
         </div>
 
-        <div class="check">
-          <input id="sms_marketing" name="sms_marketing" type="checkbox" />
-          <span>
-          I consent to receive <strong>promotional notifications about updates on new website features, marketing automation tips, and communication strategy insights</strong> from <strong>SiteSledge LLC</strong> at the phone number provided. Message frequency varies, up to 4 messages per month. Message & data rates may apply. Text HELP for assistance, reply STOP to opt out.
-          </span>
-        </div>
-
-        <div style="margin-top:14px;font-size:13px">
-          <a href="privacy.html" style="color:#2563eb;text-decoration:underline;text-underline-offset:2px">Privacy Policy</a> · <a href="terms.html" style="color:#2563eb;text-decoration:underline;text-underline-offset:2px">Terms of Service</a>
+        <div class="check check-sms-consent">
+          <input id="sms_consent" name="sms_consent" type="checkbox" />
+          <span>I consent to receive Customer Care SMS messages from SiteSledge LLC regarding my quote or service inquiry. Message frequency may vary (up to 4 messages per month). Message and data rates may apply. Reply STOP to unsubscribe. Reply HELP for help. Consent is not a condition of purchase.</span>
         </div>
 
         <div class="ctaRow">
@@ -140,8 +134,8 @@
       <div class="footCol">
         <div class="footTitle">Contact</div>
         <ul class="footList">
-          <li>Email: <a class="u" href="mailto:info%40sitesledgellc.nebulabrandgroup.com">info@sitesledgellc.nebulabrandgroup.com</a></li>
-          <li>Phone: <a class="u" href="tel:+12342250604">+1 (234) 225-0604</a></li>
+          <li>Email: <a class="u" href="mailto:contact@sitesledge.llc">contact@sitesledge.llc</a></li>
+          <li>Phone: <a class="u" href="tel:+18449460109">1-844-946-0109</a></li>
           <li>1021 E Lincolnway, 9573, Cheyenne, WY 82001, Laramie, US</li>
         </ul>
       </div>
@@ -178,8 +172,8 @@
         <img id="modalLogo" src="assets/logo.png" alt="SiteSledge LLC" onerror="this.parentElement.innerHTML='<div class=\'modal-icon-fallback\'><svg viewBox=\'0 0 24 24\'><polyline points=\'20 6 9 17 4 12\'></polyline></svg></div>'" />
       </div>
       <h3 id="modalTitle">Thank You!</h3>
-      <p><strong>SiteSledge LLC</strong> will reach out within 24 hours by phone or text if you opted in.</p>
-      <p style="font-size:13px;color:#94a3b8;margin-bottom:14px;">
+      <p id="modalMessageGeneric"><strong>SiteSledge LLC</strong> will reach out within 24 hours based on the contact preferences you provided.</p>
+      <p id="modalMessageSms" style="display:none;font-size:14px;color:#64748b;margin-bottom:14px;">
         If you opted in for SMS, you can opt out any time by replying <strong>STOP</strong>. For help, reply <strong>HELP</strong>.
       </p>
       <button class="btn" id="modalOk">Got it</button>

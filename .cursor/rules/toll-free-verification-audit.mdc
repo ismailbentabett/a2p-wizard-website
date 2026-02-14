@@ -1,0 +1,78 @@
+---
+description: Audit this website for GoHighLevel (LC Phone) Toll-Free verification readiness and produce checklist, report, and fix pack.
+globs: ["**/*.html", "**/script.js", "**/style.css", "**/legal.css"]
+---
+
+# Toll-Free SMS Verification Audit Rule
+
+When the user asks to run the Toll-Free verification audit, audit this website codebase end-to-end for Toll-Free verification readiness and generate:
+
+1. A PASS/FAIL checklist (with line-item findings)
+2. A full audit report using the exact "Report Creator" structure in `docs/TF_VERIFICATION_AUDIT_REPORT_TEMPLATE.md`
+3. A prioritized fix list with concrete edits needed in each file
+
+## Scope
+
+- Toll-Free verification only (NOT 10DLC, NOT short codes).
+- Assume the verification category is Customer Care unless the site explicitly enables marketing SMS.
+- References: A2P Toll-Free Verification Guide; GoHighLevel Toll-Free verification SOP; GoHighLevel LC Phone TF verification article (web form opt-in CTA disclosures, checkbox not pre-checked, checkbox not required to submit).
+
+## Files to Audit
+
+- index.html
+- about.html
+- services.html
+- contact.html
+- sms.html
+- privacy.html
+- terms.html
+- shared JS/CSS (script.js, style.css, legal.css)
+
+## Audit Rules (Strict)
+
+### A) Website identity
+
+- Brand/Legal Entity consistency: company name, domain, contact email, phone, address must match across pages.
+
+### B) Required legal pages
+
+- Footer must link to Privacy, Terms, SMS Program on all pages.
+
+### C) Forms collecting phone numbers
+
+Audit every form. If phone input exists, verify:
+
+- A required Terms/Privacy agreement checkbox (no SMS text inside).
+- A separate OPTIONAL SMS consent checkbox (unchecked by default).
+- SMS consent disclosure must include ALL:
+  1. business/brand name
+  2. message purpose (customer care vs marketing)
+  3. "Message & data rates may apply"
+  4. frequency disclosure with a cap (e.g. "Message frequency may vary, up to 4 msgs/month" or equivalent)
+  5. STOP opt-out instruction
+  6. HELP instruction
+  7. "Consent is not a condition of purchase"
+- Terms and Privacy links should be near the opt-in area (not inside the checkbox label if possible).
+- If phone field is optional, SMS consent must still be explicit if SMS is offered; if phone field is required, consent still cannot be forced for marketing unless explicitly designed and documented.
+
+### D) Consistency
+
+- Frequency language must match across sms.html, privacy.html, terms.html, and form disclosure.
+- STOP/HELP language must match across all.
+
+### E) Message samples
+
+- Provide 2 compliant sample messages for Customer Care that include brand + STOP, and avoid public shorteners.
+
+## Output Required
+
+1. **Checklist table:** item, PASS/FAIL, evidence (file + snippet), fix (exact edit).
+2. **Full report** using the template at `docs/TF_VERIFICATION_AUDIT_REPORT_TEMPLATE.md` (Business/Brand, Sections A–F, Final Risk Assessment).
+3. **Fix Pack** section listing exact code changes per file, in order (contact.html, index.html, sms.html, privacy.html, terms.html, script.js as applicable), including exact replacement text for the SMS consent disclosure paragraph where needed.
+
+## Edge Cases
+
+- If a form exists on multiple pages, ensure every instance is corrected.
+- If JS enforces consent in a way that violates "checkbox cannot be required," flag it and propose compliant alternatives.
+- If marketing language exists in SMS consent or SMS pages, either remove it (Customer Care-only) or require Marketing category alignment; do not assume marketing unless consent language indicates it.
+- If opt-in proof is behind login or not public, propose a public screenshot hosting approach.

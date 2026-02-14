@@ -110,7 +110,12 @@ input:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 
 
 .check{display:flex;gap:10px;align-items:flex-start;margin:12px 0}
 .check input{margin-top:3px}
-.check span{font-size:13px;color:var(--muted)}
+.check span{font-size:14px;line-height:1.5;color:var(--muted)}
+.check a{color:var(--accent)}
+/* Toll-Free consent readability: disclosure paragraph visible for screenshots */
+.check-sms-consent span{font-size:14px;line-height:1.5;color:var(--fg);max-width:100%;overflow:visible;word-wrap:break-word}
+.check-legal span{font-size:14px;line-height:1.5}
+.help-line{margin:8px 0 0;font-size:13px;color:var(--muted)}
 .small.legal{font-size:12px;color:var(--muted);margin-top:10px}
 .small.legal a{color:var(--accent) !important;text-decoration:underline;text-underline-offset:2px}
 

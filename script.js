@@ -1,9 +1,12 @@
 (function(){
+  // ——— Single source of truth (Toll-Free verification) ———
+  var BUSINESS_NAME = "SiteSledge LLC";
+  var SUPPORT_EMAIL = "contact@sitesledge.llc";
+  var PRIMARY_DOMAIN = "sitesledge.llc";
+  var TF_NUMBER_E164 = "+18449460109";
+  var TF_NUMBER_DISPLAY = "1-844-946-0109";
+
   var webhookUrl = 'https://hook.us2.make.com/thkc91ciiefnc6kk25wfemv4zhwy52as';
-  var businessName = 'SiteSledge LLC';
-  var slug = 'sitesledgellc';
-  var supportEmail = 'info@sitesledgellc.nebulabrandgroup.com';
-  var supportPhone = '+1 (234) 225-0604';
 
   var modal = document.getElementById('thankYouModal');
   var modalClose = document.getElementById('modalClose');
@@ -29,72 +32,127 @@
     if(e.key === 'Escape') hideModal();
   });
 
+  // ——— DOM normalization: enforce TF number, support email, domain ———
+  function normalizeDom(){
+    var telLinks = document.querySelectorAll('a[href^="tel:"]');
+    for(var i = 0; i < telLinks.length; i++){
+      telLinks[i].setAttribute('href', 'tel:' + TF_NUMBER_E164);
+    }
+    var mailtoLinks = document.querySelectorAll('a[href^="mailto:"]');
+    for(var j = 0; j < mailtoLinks.length; j++){
+      mailtoLinks[j].setAttribute('href', 'mailto:' + SUPPORT_EMAIL);
+    }
+    function walkText(node){
+      if(node.nodeType === 3){
+        var t = node.textContent;
+        var changed = false;
+        var s = t;
+        s = s.replace(/\+\s*1\s*\(\s*234\s*\)\s*225\s*[-.]?\s*0604/gi, TF_NUMBER_DISPLAY);
+        s = s.replace(/\+\s*1\s*234\s*225\s*0604/gi, TF_NUMBER_DISPLAY);
+        s = s.replace(/\(\s*234\s*\)\s*225\s*[-.]?\s*0604/g, TF_NUMBER_DISPLAY);
+        s = s.replace(/234\s*[-.]?\s*225\s*[-.]?\s*0604/g, TF_NUMBER_DISPLAY);
+        s = s.replace(/\+18449460109/g, TF_NUMBER_DISPLAY);
+        if(s !== t){ node.textContent = s; changed = true; }
+        if(changed) return;
+        var emailPattern = /info\s*@\s*sitesledgellc\.nebulabrandgroup\.com/gi;
+        if(emailPattern.test(t)){
+          node.textContent = t.replace(emailPattern, SUPPORT_EMAIL);
+        }
+        var sitesledgeCom = /\bsitesledge\.com\b/g;
+        if(sitesledgeCom.test(t)){
+          node.textContent = t.replace(sitesledgeCom, PRIMARY_DOMAIN);
+        }
+        return;
+      }
+      if(node.nodeType === 1 && node.childNodes && node.childNodes.length){
+        for(var k = 0; k < node.childNodes.length; k++) walkText(node.childNodes[k]);
+      }
+    }
+    walkText(document.body);
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', normalizeDom);
+  } else {
+    normalizeDom();
+  }
+
+  function validateForm(form){
+    var legalEl = form.querySelector('[name="agree_legal"]');
+    var smsEl = form.querySelector('[name="sms_consent"]');
+    var phoneEl = form.querySelector('[name="phone"]');
+    if(legalEl && !legalEl.checked) return 'Please agree to the Terms of Service and Privacy Policy to continue.';
+    if(smsEl && smsEl.checked){
+      var raw = phoneEl ? (phoneEl.value || '').trim() : '';
+      if(!raw) return 'Phone number required for SMS opt-in.';
+      var digits = raw.replace(/\D/g, '');
+      if(digits.length < 10) return 'Please enter a valid phone number (at least 10 digits) for SMS opt-in.';
+    }
+    return null;
+  }
+
   function handleFormSubmit(form, formType){
+    var err = validateForm(form);
+    if(err){
+      alert(err);
+      return;
+    }
+
     var submitBtn = form.querySelector('button[type="submit"]');
     var originalText = submitBtn ? submitBtn.textContent : 'Submit';
-    
-    // Prevent double submit
+
     if(submitBtn){
       if(submitBtn.disabled) return;
       submitBtn.disabled = true;
       submitBtn.textContent = 'Submitting...';
     }
 
-    var data = {
-      timestamp: new Date().toISOString(),
-      form_type: formType,
-      page_url: window.location.href,
-      business_name: businessName,
-      slug: slug,
-      support_email: supportEmail,
-      support_phone: supportPhone,
-      full_name: '',
-      email: '',
-      phone: '',
-      message: '',
-      sms_marketing: false,
-      sms_informational: false
-    };
+    var legalEl = form.querySelector('[name="agree_legal"]');
+    var smsEl = form.querySelector('[name="sms_consent"]');
+    var agreeLegal = legalEl ? legalEl.checked : false;
+    var smsConsent = smsEl ? smsEl.checked : false;
 
     var nameEl = form.querySelector('[name="full_name"], [name="name"]');
     var emailEl = form.querySelector('[name="email"]');
     var phoneEl = form.querySelector('[name="phone"]');
     var msgEl = form.querySelector('[name="message"]');
-    var mktEl = form.querySelector('[name="sms_marketing"]');
-    var infoEl = form.querySelector('[name="sms_informational"]');
 
-    if(nameEl) data.full_name = nameEl.value || '';
-    if(emailEl) data.email = emailEl.value || '';
-    if(phoneEl) data.phone = phoneEl.value || '';
-    if(msgEl) data.message = msgEl.value || '';
-    if(mktEl) data.sms_marketing = mktEl.checked;
-    if(infoEl) data.sms_informational = infoEl.checked;
+    var data = {
+      full_name: nameEl ? (nameEl.value || '') : '',
+      email: emailEl ? (emailEl.value || '') : '',
+      phone: phoneEl ? (phoneEl.value || '') : '',
+      message: msgEl ? (msgEl.value || '') : '',
+      agree_legal: agreeLegal,
+      sms_consent: smsConsent,
+      sms_consent_text_version: 'v1.0',
+      timestamp_iso: new Date().toISOString(),
+      page_url: window.location.href,
+      business_name: BUSINESS_NAME,
+      support_email: SUPPORT_EMAIL,
+      support_phone: TF_NUMBER_DISPLAY
+    };
 
-    // Send to webhook (fire and forget - show success regardless)
     if(webhookUrl){
       fetch(webhookUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
-        mode: 'no-cors' // Make.com webhooks may not have CORS headers
+        mode: 'no-cors'
       }).catch(function(){});
     }
 
-    // Small delay for UX, then show modal
+    var modalMessageSms = document.getElementById('modalMessageSms');
+    if(modalMessageSms) modalMessageSms.style.display = smsConsent ? 'block' : 'none';
+
     setTimeout(function(){
-      // Reset button
       if(submitBtn){
         submitBtn.disabled = false;
         submitBtn.textContent = originalText;
       }
-      // Show modal
       showModal();
-      // Reset form
       form.reset();
     }, 400);
   }
 
-  // Attach to optin form (home page)
   var optinForm = document.getElementById('optinForm');
   if(optinForm){
     optinForm.addEventListener('submit', function(e){
@@ -103,7 +161,6 @@
     });
   }
 
-  // Attach to contact form
   var contactForm = document.getElementById('contactForm');
   if(contactForm){
     contactForm.addEventListener('submit', function(e){
